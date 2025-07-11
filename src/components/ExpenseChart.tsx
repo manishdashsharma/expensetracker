@@ -200,13 +200,13 @@ export default function ExpenseChart({ expenses }: ExpenseChartProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex space-x-4 mb-6">
+      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
         <motion.button
           onClick={() => setActiveTab('daily')}
           variants={buttonVariants}
           whileHover="hover"
           whileTap="tap"
-          className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+          className={`px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
             activeTab === 'daily'
               ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
               : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/30'
@@ -219,7 +219,7 @@ export default function ExpenseChart({ expenses }: ExpenseChartProps) {
           variants={buttonVariants}
           whileHover="hover"
           whileTap="tap"
-          className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+          className={`px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
             activeTab === 'category'
               ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
               : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/30'
@@ -230,7 +230,7 @@ export default function ExpenseChart({ expenses }: ExpenseChartProps) {
       </div>
       
       <motion.div 
-        className="h-96"
+        className="h-64 sm:h-96"
         key={activeTab}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

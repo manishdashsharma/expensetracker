@@ -72,29 +72,29 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <h1 className="text-3xl font-light text-gray-900 text-center mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-light text-gray-900 text-center mb-6 sm:mb-8">
           Money Tracker
         </h1>
         
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Goal Section */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-medium text-gray-900 mb-4">Overview</h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-medium text-gray-900 mb-4">Overview</h2>
             {goal ? (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-gray-50 rounded">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="text-center p-3 sm:p-4 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600 mb-1">Bank Amount</div>
-                    <div className="text-2xl font-medium text-gray-900">₹{goal.bankAmount.toLocaleString()}</div>
+                    <div className="text-xl sm:text-2xl font-medium text-gray-900">₹{goal.bankAmount.toLocaleString()}</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 rounded">
+                  <div className="text-center p-3 sm:p-4 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600 mb-1">Spent ({filterDays} days)</div>
-                    <div className="text-2xl font-medium text-gray-900">₹{totalExpenses.toLocaleString()}</div>
+                    <div className="text-xl sm:text-2xl font-medium text-gray-900">₹{totalExpenses.toLocaleString()}</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 rounded">
+                  <div className="text-center p-3 sm:p-4 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600 mb-1">Remaining</div>
-                    <div className={`text-2xl font-medium ${remainingAmount >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                    <div className={`text-xl sm:text-2xl font-medium ${remainingAmount >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
                       ₹{remainingAmount.toLocaleString()}
                     </div>
                   </div>
@@ -121,8 +121,8 @@ export default function Home() {
           </div>
 
           {/* Stats Section */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-medium text-gray-900 mb-4">Statistics</h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-medium text-gray-900 mb-4">Statistics</h2>
             <ReportFilters filterDays={filterDays} onFilterChange={setFilterDays} />
             <div className="space-y-3 mt-4">
               <div className="flex justify-between items-center">
@@ -143,14 +143,14 @@ export default function Home() {
           </div>
 
           {/* Chart Section */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-medium text-gray-900 mb-4">Analytics</h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-medium text-gray-900 mb-4">Analytics</h2>
             <ExpenseChart expenses={filteredExpenses} />
           </div>
 
           {/* Add Expense Form */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-medium text-gray-900 mb-4">Add Expense</h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-medium text-gray-900 mb-4">Add Expense</h2>
             <ExpenseForm onExpenseAdded={handleExpenseAdded} />
           </div>
         </div>

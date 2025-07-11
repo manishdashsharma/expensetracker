@@ -62,7 +62,7 @@ export default function ExpenseForm({ onExpenseAdded }: ExpenseFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Amount (₹)
@@ -74,7 +74,7 @@ export default function ExpenseForm({ onExpenseAdded }: ExpenseFormProps) {
             required
             min="0"
             step="0.01"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
+            className="w-full px-3 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             placeholder="0.00"
           />
         </div>
@@ -86,7 +86,7 @@ export default function ExpenseForm({ onExpenseAdded }: ExpenseFormProps) {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
+            className="w-full px-3 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -128,7 +128,7 @@ export default function ExpenseForm({ onExpenseAdded }: ExpenseFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:cursor-not-allowed"
+        className="w-full bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white font-medium py-3 px-4 text-base rounded-md transition-colors duration-200 disabled:cursor-not-allowed"
       >
         {loading ? (
           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>

@@ -14,12 +14,12 @@ const filterOptions = [
 
 export default function ReportFilters({ filterDays, onFilterChange }: ReportFiltersProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
       {filterOptions.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onFilterChange(value)}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors duration-200 ${
+          className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
             filterDays === value
               ? 'bg-gray-900 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
