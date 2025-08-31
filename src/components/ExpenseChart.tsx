@@ -1,20 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { IExpense } from '@/models/Expense';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { expenseCategories, getCategoryById } from '@/config/expenseConfig';
 import { format, startOfDay, eachDayOfInterval, subDays } from 'date-fns';
+import { BarChart3, PieChart, TrendingUp, Loader2 } from 'lucide-react';
 
 const Chart = dynamic(() => import('react-apexcharts'), { 
   ssr: false,
-  loading: () => <div className="h-96 flex items-center justify-center">
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-      className="w-8 h-8 border-2 border-green-400 border-t-transparent rounded-full"
-    />
-  </div>
+  loading: () => (
+    <div className="h-96 flex items-center justify-center">
+      <div className="flex items-center gap-2">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+        <span className="text-muted-foreground">Loading charts...</span>
+      </div>
+    </div>
+  )
 });
 
 interface ExpenseChartProps {
@@ -22,93 +28,104 @@ interface ExpenseChartProps {
 }
 
 export default function ExpenseChart({ expenses }: ExpenseChartProps) {
-  const [chartData, setChartData] = useState<any>({
-    series: [],
-    options: {},
-  });
-  const [activeTab, setActiveTab] = useState<'daily' | 'category'>('daily');
+  const [dailyChartData, setDailyChartData] = useState<any>({ series: [], options: {} });
+  const [categoryChartData, setCategoryChartData] = useState<any>({ series: [], options: {} });
+  const [monthlyChartData, setMonthlyChartData] = useState<any>({ series: [], options: {} });
 
   useEffect(() => {
-    if (activeTab === 'daily') {
-      generateDailyChart();
-    } else {
-      generateCategoryChart();
-    }
-  }, [expenses, activeTab]);
+    generateCharts();
+  }, [expenses]);
+
+  const generateCharts = () => {
+    generateDailyChart();
+    generateCategoryChart();
+    generateMonthlyChart();
+  };
 
   const generateDailyChart = () => {
     const today = new Date();
-    const startDate = subDays(today, 6);
+    const startDate = subDays(today, 13); // Last 14 days
     const dateRange = eachDayOfInterval({ start: startDate, end: today });
 
-    const dailyExpenses = dateRange.map(date => {
-      const dayExpenses = expenses.filter(expense => {
-        const expenseDate = startOfDay(new Date(expense.date));
-        return expenseDate.getTime() === startOfDay(date).getTime();
+    const dailyData = dateRange.map(date => {
+      const dayTransactions = expenses.filter(transaction => {
+        const transactionDate = startOfDay(new Date(transaction.date));
+        return transactionDate.getTime() === startOfDay(date).getTime();
       });
+      
+      const income = dayTransactions
+        .filter(t => t.type === 'credit')
+        .reduce((sum, t) => sum + t.amount, 0);
+      
+      const expenseAmount = dayTransactions
+        .filter(t => t.type === 'debit')
+        .reduce((sum, t) => sum + t.amount, 0);
       
       return {
         date: format(date, 'MMM dd'),
-        amount: dayExpenses.reduce((sum, expense) => sum + expense.amount, 0)
+        income,
+        expenses: expenseAmount
       };
     });
 
-    setChartData({
-      series: [{
-        name: 'Daily Expenses',
-        data: dailyExpenses.map(d => d.amount)
-      }],
+    setDailyChartData({
+      series: [
+        {
+          name: 'Income',
+          data: dailyData.map(d => d.income),
+          color: '#10b981'
+        },
+        {
+          name: 'Expenses', 
+          data: dailyData.map(d => d.expenses),
+          color: '#ef4444'
+        }
+      ],
       options: {
         chart: {
           type: 'line',
           height: 350,
           background: 'transparent',
-          toolbar: {
-            show: false
-          }
+          toolbar: { show: false },
+          animations: { enabled: true }
         },
-        theme: {
-          mode: 'dark'
+        colors: ['#10b981', '#ef4444'],
+        dataLabels: { enabled: false },
+        stroke: {
+          curve: 'smooth',
+          width: 3
         },
-        colors: ['#22c55e'],
+        markers: {
+          size: 5,
+          strokeWidth: 2,
+          strokeColors: ['#10b981', '#ef4444'],
+          fillColors: ['#10b981', '#ef4444']
+        },
         xaxis: {
-          categories: dailyExpenses.map(d => d.date),
+          categories: dailyData.map(d => d.date),
           labels: {
-            style: {
-              colors: '#d1d5db'
-            }
+            style: { colors: '#64748b', fontSize: '12px' }
           }
         },
         yaxis: {
           labels: {
-            style: {
-              colors: '#d1d5db'
-            },
-            formatter: (val: number) => `₹${val.toFixed(2)}`
+            style: { colors: '#64748b' },
+            formatter: (val: number) => `₹${val.toLocaleString()}`
           }
         },
         grid: {
-          borderColor: '#1f2937',
-          strokeDashArray: 4
+          borderColor: '#e2e8f0',
+          strokeDashArray: 2
         },
-        stroke: {
-          curve: 'smooth',
-          width: 4
-        },
-        markers: {
-          size: 8,
-          colors: ['#22c55e'],
-          strokeColors: '#000000',
-          strokeWidth: 2
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right',
+          labels: { colors: '#64748b' }
         },
         tooltip: {
-          theme: 'dark',
-          style: {
-            backgroundColor: '#111827',
-            color: '#ffffff'
-          },
+          theme: 'light',
           y: {
-            formatter: (val: number) => `₹${val.toFixed(2)}`
+            formatter: (val: number) => `₹${val.toLocaleString()}`
           }
         }
       }
@@ -116,15 +133,26 @@ export default function ExpenseChart({ expenses }: ExpenseChartProps) {
   };
 
   const generateCategoryChart = () => {
-    const categoryData = expenses.reduce((acc, expense) => {
-      acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    // Only show expenses in category chart
+    const expensesByCategory = expenses
+      .filter(e => e.type === 'debit')
+      .reduce((acc, transaction) => {
+        const category = getCategoryById(transaction.category);
+        const categoryName = category?.label || 'Other';
+        acc[categoryName] = (acc[categoryName] || 0) + transaction.amount;
+        return acc;
+      }, {} as Record<string, number>);
 
-    const categories = Object.keys(categoryData);
-    const amounts = Object.values(categoryData);
+    const categories = Object.keys(expensesByCategory);
+    const amounts = Object.values(expensesByCategory);
+    
+    // Generate colors based on category config
+    const colors = categories.map(categoryName => {
+      const category = expenseCategories.find(c => c.label === categoryName);
+      return category?.color || '#64748b';
+    });
 
-    setChartData({
+    setCategoryChartData({
       series: amounts,
       options: {
         chart: {
@@ -132,117 +160,231 @@ export default function ExpenseChart({ expenses }: ExpenseChartProps) {
           height: 350,
           background: 'transparent'
         },
-        theme: {
-          mode: 'dark'
-        },
-        colors: ['#22c55e', '#16a34a', '#15803d', '#166534', '#14532d', '#10b981', '#059669', '#047857'],
+        colors,
         labels: categories,
         legend: {
-          labels: {
-            colors: '#d1d5db'
-          }
+          position: 'bottom',
+          labels: { colors: '#64748b' }
         },
         plotOptions: {
           pie: {
             donut: {
-              size: '60%',
+              size: '65%',
               labels: {
                 show: true,
                 name: {
                   show: true,
-                  fontSize: '16px',
-                  color: '#d1d5db'
+                  fontSize: '14px',
+                  color: '#64748b'
                 },
                 value: {
                   show: true,
-                  fontSize: '20px',
-                  color: '#22c55e',
-                  formatter: (val: string) => `₹${parseFloat(val).toFixed(2)}`
+                  fontSize: '16px',
+                  color: '#1e293b',
+                  formatter: (val: string) => `₹${parseFloat(val).toLocaleString()}`
                 },
                 total: {
                   show: true,
-                  label: 'Total',
-                  color: '#d1d5db',
-                  formatter: () => `₹${amounts.reduce((sum, amount) => sum + amount, 0).toFixed(2)}`
+                  label: 'Total Expenses',
+                  color: '#64748b',
+                  fontSize: '12px',
+                  formatter: () => `₹${amounts.reduce((sum, amount) => sum + amount, 0).toLocaleString()}`
                 }
               }
             }
           }
         },
         tooltip: {
-          theme: 'dark',
-          style: {
-            backgroundColor: '#111827',
-            color: '#ffffff'
-          },
+          theme: 'light',
           y: {
-            formatter: (val: number) => `₹${val.toFixed(2)}`
+            formatter: (val: number) => `₹${val.toLocaleString()}`
           }
         }
       }
     });
   };
 
-  const buttonVariants = {
-    hover: {
-      scale: 1.05,
-      transition: { duration: 0.2 }
-    },
-    tap: {
-      scale: 0.95,
-      transition: { duration: 0.1 }
-    }
+  const generateMonthlyChart = () => {
+    // Group by month for income vs expenses
+    const monthlyData = expenses.reduce((acc, transaction) => {
+      const month = format(new Date(transaction.date), 'MMM yyyy');
+      if (!acc[month]) {
+        acc[month] = { income: 0, expenses: 0 };
+      }
+      
+      if (transaction.type === 'credit') {
+        acc[month].income += transaction.amount;
+      } else {
+        acc[month].expenses += transaction.amount;
+      }
+      
+      return acc;
+    }, {} as Record<string, { income: number; expenses: number }>);
+
+    const months = Object.keys(monthlyData).sort();
+    const incomeData = months.map(month => monthlyData[month].income);
+    const expenseData = months.map(month => monthlyData[month].expenses);
+
+    setMonthlyChartData({
+      series: [
+        {
+          name: 'Income',
+          data: incomeData,
+          color: '#10b981'
+        },
+        {
+          name: 'Expenses',
+          data: expenseData,
+          color: '#ef4444'
+        }
+      ],
+      options: {
+        chart: {
+          type: 'bar',
+          height: 350,
+          background: 'transparent',
+          toolbar: { show: false }
+        },
+        colors: ['#10b981', '#ef4444'],
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '60%',
+            borderRadius: 4
+          }
+        },
+        dataLabels: { enabled: false },
+        xaxis: {
+          categories: months,
+          labels: {
+            style: { colors: '#64748b', fontSize: '12px' }
+          }
+        },
+        yaxis: {
+          labels: {
+            style: { colors: '#64748b' },
+            formatter: (val: number) => `₹${val.toLocaleString()}`
+          }
+        },
+        grid: {
+          borderColor: '#e2e8f0',
+          strokeDashArray: 2
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right',
+          labels: { colors: '#64748b' }
+        },
+        tooltip: {
+          theme: 'light',
+          y: {
+            formatter: (val: number) => `₹${val.toLocaleString()}`
+          }
+        }
+      }
+    });
   };
 
+  if (!expenses.length) {
+    return (
+      <Card>
+        <CardContent className="p-6 sm:p-8 text-center">
+          <div className="text-muted-foreground mb-2">
+            <BarChart3 className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+          </div>
+          <h3 className="font-medium mb-1 text-sm sm:text-base">No transaction data</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Add some transactions to see your financial insights and trends
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-        <motion.button
-          onClick={() => setActiveTab('daily')}
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
-          className={`px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
-            activeTab === 'daily'
-              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
-              : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/30'
-          }`}
-        >
-          Daily Trend
-        </motion.button>
-        <motion.button
-          onClick={() => setActiveTab('category')}
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
-          className={`px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
-            activeTab === 'category'
-              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
-              : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/30'
-          }`}
-        >
-          By Category
-        </motion.button>
-      </div>
-      
-      <motion.div 
-        className="h-64 sm:h-96"
-        key={activeTab}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Chart
-          options={chartData.options}
-          series={chartData.series}
-          type={activeTab === 'daily' ? 'line' : 'donut'}
-          height={350}
-        />
-      </motion.div>
-    </motion.div>
+    <div className="space-y-4 sm:space-y-6">
+      <Tabs defaultValue="daily" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 h-9 sm:h-10">
+          <TabsTrigger value="daily" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Daily</span>
+            <span className="xs:hidden">📈</span>
+          </TabsTrigger>
+          <TabsTrigger value="category" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <PieChart className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Category</span>
+            <span className="xs:hidden">🥧</span>
+          </TabsTrigger>
+          <TabsTrigger value="monthly" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Monthly</span>
+            <span className="xs:hidden">📊</span>
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="daily">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-lg sm:text-xl">Daily Income vs Expenses</span>
+                <Badge variant="outline" className="self-start sm:self-auto text-xs">Last 14 days</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="w-full">
+                <Chart
+                  options={dailyChartData.options}
+                  series={dailyChartData.series}
+                  type="line"
+                  height={280}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="category">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-lg sm:text-xl">Expenses by Category</span>
+                <Badge variant="outline" className="self-start sm:self-auto text-xs">Current period</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="w-full">
+                <Chart
+                  options={categoryChartData.options}
+                  series={categoryChartData.series}
+                  type="donut"
+                  height={280}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="monthly">
+          <Card>
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-lg sm:text-xl">Monthly Income vs Expenses</span>
+                <Badge variant="outline" className="self-start sm:self-auto text-xs">All months</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="w-full">
+                <Chart
+                  options={monthlyChartData.options}
+                  series={monthlyChartData.series}
+                  type="bar"
+                  height={280}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

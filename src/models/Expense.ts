@@ -6,6 +6,9 @@ export interface IExpense {
   description: string;
   category: string;
   date: Date;
+  type: 'credit' | 'debit'; // Income or Expense
+  paymentMode: string;
+  remarks?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -25,7 +28,20 @@ const ExpenseSchema = new mongoose.Schema<IExpense>(
     category: {
       type: String,
       required: true,
-      enum: ['Food', 'Transportation', 'Entertainment', 'Shopping', 'Bills', 'Health', 'Education', 'Other'],
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ['credit', 'debit'],
+      default: 'debit'
+    },
+    paymentMode: {
+      type: String,
+      required: true,
+    },
+    remarks: {
+      type: String,
+      maxLength: 500,
     },
     date: {
       type: Date,
