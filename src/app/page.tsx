@@ -7,7 +7,6 @@ import ExpenseChart from '@/components/ExpenseChart';
 import ReportsDashboard from '@/components/ReportsDashboard';
 import ReportFilters from '@/components/ReportFilters';
 import { IExpense } from '@/models/Expense';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -87,122 +86,124 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <div className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="h-6 w-6 sm:h-8 sm:w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Wallet className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+    <div className="min-h-screen bg-slate-50">
+      {/* Mobile-First Header */}
+      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div className="px-4 py-4 sm:px-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <Wallet className="h-5 w-5 text-white" />
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-sm sm:text-xl font-bold text-gray-900 truncate">
+              <div>
+                <h1 className="font-bold text-slate-900 text-xl">
                   Finance Tracker
                 </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
-                  Manage your expenses and income efficiently
+                <p className="text-sm text-slate-600 hidden sm:block">
+                  Track your money easily
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Badge variant="outline" className="hidden md:flex text-xs">
-                {expenses.length} transactions
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 font-medium">
+                {expenses.length}
               </Badge>
-              <div className="scale-90 sm:scale-100">
-                <ReportFilters filterDays={filterDays} onFilterChange={setFilterDays} />
-              </div>
+              <ReportFilters filterDays={filterDays} onFilterChange={setFilterDays} />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-8">
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate">Total Income</p>
-                  <p className="text-lg sm:text-2xl font-bold text-green-600 truncate">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Quick Stats - Mobile First */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-green-500 rounded-lg flex items-center justify-center">
+                      <TrendingUp className="h-4 w-4 text-white" />
+                    </div>
+                    <p className="text-sm font-medium text-green-800">Total Income</p>
+                  </div>
+                  <p className="text-2xl font-bold text-green-700">
                     ₹{totalIncome.toLocaleString()}
                   </p>
                 </div>
-                <div className="h-8 w-8 sm:h-10 sm:w-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 self-end sm:self-auto">
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate">Total Expenses</p>
-                  <p className="text-lg sm:text-2xl font-bold text-red-600 truncate">
+          <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-red-500 rounded-lg flex items-center justify-center">
+                      <Target className="h-4 w-4 text-white" />
+                    </div>
+                    <p className="text-sm font-medium text-red-800">Total Expenses</p>
+                  </div>
+                  <p className="text-2xl font-bold text-red-700">
                     ₹{totalExpenses.toLocaleString()}
                   </p>
                 </div>
-                <div className="h-8 w-8 sm:h-10 sm:w-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 self-end sm:self-auto">
-                  <Target className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
-                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate">Net Balance</p>
-                  <p className={`text-lg sm:text-2xl font-bold truncate ${
-                    netBalance >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+          <Card className={`bg-gradient-to-br ${netBalance >= 0 ? 'from-emerald-50 to-emerald-100 border-emerald-200' : 'from-orange-50 to-orange-100 border-orange-200'}`}>
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${netBalance >= 0 ? 'bg-emerald-500' : 'bg-orange-500'}`}>
+                      <Wallet className="h-4 w-4 text-white" />
+                    </div>
+                    <p className={`text-sm font-medium ${netBalance >= 0 ? 'text-emerald-800' : 'text-orange-800'}`}>Net Balance</p>
+                  </div>
+                  <p className={`text-2xl font-bold ${netBalance >= 0 ? 'text-emerald-700' : 'text-orange-700'}`}>
                     ₹{netBalance.toLocaleString()}
                   </p>
                 </div>
-                <div className={`h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center flex-shrink-0 self-end sm:self-auto ${
-                  netBalance >= 0 ? 'bg-green-100' : 'bg-red-100'
-                }`}>
-                  <Wallet className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                    netBalance >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`} />
-                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate">Transactions</p>
-                  <p className="text-lg sm:text-2xl font-bold text-blue-600">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <List className="h-4 w-4 text-white" />
+                    </div>
+                    <p className="text-sm font-medium text-blue-800">Transactions</p>
+                  </div>
+                  <p className="text-2xl font-bold text-blue-700">
                     {filteredExpenses.length}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-blue-600">
                     Last {filterDays} days
                   </p>
-                </div>
-                <div className="h-8 w-8 sm:h-10 sm:w-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 self-end sm:self-auto">
-                  <List className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Quick Add Section */}
-        <Card className="mb-4 sm:mb-8">
-          <CardHeader className="pb-3 sm:pb-6">
-            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-              <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+        {/* Quick Add Section - Mobile Optimized */}
+        <Card className="mb-6 shadow-lg border-0 bg-gradient-to-br from-white to-slate-50">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-3 text-xl font-bold">
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-md">
+                <Plus className="h-5 w-5 text-white" />
+              </div>
               Quick Add Transaction
             </CardTitle>
-            <CardDescription className="text-sm">
-              Quickly add your daily income or expense transactions
+            <CardDescription className="text-base text-slate-600 mt-2">
+              Tap to quickly record your income or expenses
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
@@ -210,43 +211,51 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        {/* Main Content Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-11 sm:h-10">
-            <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-1 sm:px-3">
+        {/* Main Content Tabs - Mobile Optimized */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 h-14 bg-white shadow-lg rounded-2xl border-0 p-1">
+            <TabsTrigger 
+              value="overview" 
+              className="flex flex-col items-center gap-1 text-xs font-medium px-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            >
               <BarChart3 className="h-4 w-4" />
-              <span className="hidden xs:inline sm:hidden lg:inline">Overview</span>
-              <span className="xs:hidden lg:hidden">📊</span>
+              <span>Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-1 sm:px-3">
+            <TabsTrigger 
+              value="transactions" 
+              className="flex flex-col items-center gap-1 text-xs font-medium px-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            >
               <List className="h-4 w-4" />
-              <span className="hidden xs:inline sm:hidden lg:inline">Transactions</span>
-              <span className="xs:hidden lg:hidden">📋</span>
+              <span>History</span>
             </TabsTrigger>
-            <TabsTrigger value="reports" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-1 sm:px-3">
+            <TabsTrigger 
+              value="reports" 
+              className="flex flex-col items-center gap-1 text-xs font-medium px-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            >
               <BarChart3 className="h-4 w-4" />
-              <span className="hidden xs:inline sm:hidden lg:inline">Reports</span>
-              <span className="xs:hidden lg:hidden">📈</span>
+              <span>Reports</span>
             </TabsTrigger>
-            <TabsTrigger value="add" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-1 sm:px-3">
+            <TabsTrigger 
+              value="add" 
+              className="flex flex-col items-center gap-1 text-xs font-medium px-2 py-3 rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200"
+            >
               <Plus className="h-4 w-4" />
-              <span className="hidden xs:inline sm:hidden lg:inline">Add New</span>
-              <span className="xs:hidden lg:hidden">➕</span>
+              <span>Add New</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+          <TabsContent value="overview" className="space-y-6 mt-6">
             <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
               <div className="order-2 lg:order-1">
                 <ExpenseChart expenses={filteredExpenses} />
               </div>
-              <div className="space-y-4 sm:space-y-6 order-1 lg:order-2">
+              <div className="space-y-6 order-1 lg:order-2">
                 <ReportsDashboard expenses={filteredExpenses} filterDays={filterDays} />
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="transactions" className="space-y-4 sm:space-y-6">
+          <TabsContent value="transactions" className="space-y-6 mt-6">
             <ExpenseList 
               expenses={expenses}
               onExpenseUpdated={handleExpenseUpdated}
@@ -254,12 +263,12 @@ export default function Home() {
             />
           </TabsContent>
 
-          <TabsContent value="reports" className="space-y-4 sm:space-y-6">
+          <TabsContent value="reports" className="space-y-6 mt-6">
             <ExpenseChart expenses={filteredExpenses} />
             <ReportsDashboard expenses={filteredExpenses} filterDays={filterDays} />
           </TabsContent>
 
-          <TabsContent value="add" className="space-y-4 sm:space-y-6">
+          <TabsContent value="add" className="mt-6">
             <div className="max-w-2xl mx-auto">
               <ExpenseForm onExpenseAdded={handleExpenseAdded} />
             </div>

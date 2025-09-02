@@ -6,14 +6,11 @@ export const expenseCategories = [
   { id: 'entertainment', label: 'Entertainment', color: '#96CEB4', icon: '🎬' },
   { id: 'bills', label: 'Bills & Utilities', color: '#FECA57', icon: '⚡' },
   { id: 'healthcare', label: 'Healthcare', color: '#FF9FF3', icon: '🏥' },
-  { id: 'education', label: 'Education', color: '#54A0FF', icon: '📚' },
   { id: 'travel', label: 'Travel', color: '#5F27CD', icon: '✈️' },
   { id: 'groceries', label: 'Groceries', color: '#00D2D3', icon: '🥕' },
   { id: 'fuel', label: 'Fuel', color: '#FF9F43', icon: '⛽' },
-  { id: 'personal_care', label: 'Personal Care', color: '#A55EEA', icon: '💄' },
-  { id: 'gifts', label: 'Gifts & Donations', color: '#26DE81', icon: '🎁' },
-  { id: 'insurance', label: 'Insurance', color: '#FD79A8', icon: '🛡️' },
   { id: 'investments', label: 'Investments', color: '#FDCB6E', icon: '📈' },
+  { id: 'saving', label: 'Saving', color: '#2ECC71', icon: '💎' },
   { id: 'rent', label: 'Rent/Mortgage', color: '#6C5CE7', icon: '🏠' },
   { id: 'other', label: 'Other', color: '#A0A0A0', icon: '📋' }
 ];
@@ -22,9 +19,7 @@ export const incomeCategories = [
   { id: 'salary', label: 'Salary', color: '#26DE81', icon: '💰' },
   { id: 'freelance', label: 'Freelance', color: '#10B981', icon: '💻' },
   { id: 'investment', label: 'Investment Returns', color: '#059669', icon: '📈' },
-  { id: 'rental', label: 'Rental Income', color: '#047857', icon: '🏠' },
   { id: 'bonus', label: 'Bonus', color: '#065F46', icon: '🎯' },
-  { id: 'gift', label: 'Gift Received', color: '#064E3B', icon: '🎁' },
   { id: 'other_income', label: 'Other Income', color: '#6B7280', icon: '💵' }
 ];
 

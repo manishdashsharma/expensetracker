@@ -169,13 +169,13 @@ export default function ReportsDashboard({ expenses, filterDays }: ReportsDashbo
                   Last {filterDays} days
                 </p>
               </div>
-              <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+              {/* <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
                 reports.netBalance >= 0 ? 'bg-green-100' : 'bg-red-100'
               }`}>
                 <Target className={`h-5 w-5 ${
                   reports.netBalance >= 0 ? 'text-green-600' : 'text-red-600'
                 }`} />
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>
@@ -192,9 +192,6 @@ export default function ReportsDashboard({ expenses, filterDays }: ReportsDashbo
                   Expense per day
                 </p>
               </div>
-              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-blue-600" />
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -210,11 +207,11 @@ export default function ReportsDashboard({ expenses, filterDays }: ReportsDashbo
                   }`}>
                     {formatPercentage(Math.abs(reports.weeklyTrend))}
                   </p>
-                  {reports.weeklyTrend <= 0 ? (
+                  {/* {reports.weeklyTrend <= 0 ? (
                     <TrendingDown className="h-4 w-4 text-green-600" />
                   ) : (
                     <TrendingUp className="h-4 w-4 text-red-600" />
-                  )}
+                  )} */}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   vs previous week
@@ -235,9 +232,6 @@ export default function ReportsDashboard({ expenses, filterDays }: ReportsDashbo
                 <p className="text-sm text-muted-foreground">
                   Total entries
                 </p>
-              </div>
-              <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-purple-600" />
               </div>
             </div>
           </CardContent>
